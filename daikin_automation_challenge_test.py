@@ -98,68 +98,68 @@ class TestHeatingSystem:
         assert self.system.is_holiday_mode_on() == False
 
 
-    # TC16: Validate if the user can configure the Schedule Usage, in interval times mode
+    # TC15: Validate if the user can configure the Schedule Usage, in interval times mode
     @pytest.mark.high
     def test_MMI_schedule_usage_configuration(self):
         self.system.configure_schedule_usage("14:00", "17:00", 22)
         assert self.system.get_scheduled_temperature("16:00") == 22
 
-    # TC17: Validate if the Schedule Usage receives the default values when it is not defined
+    # TC16: Validate if the Schedule Usage receives the default values when it is not defined
     @pytest.mark.high
     def test_MMI_default_schedule_usage(self):
         self.system.configure_schedule_usage("14:00", "17:00", 22)
         self.system.turn_off_schedule_usage()
         assert self.system.get_scheduled_temperature("15:00") == self.system.default_temperature()
 
-    # TC32: Validate if the RT shows the current room temperature
+    # TC31: Validate if the RT shows the current room temperature
     @pytest.mark.critical
     def test_RT_shows_current_temperature(self):
         self.system.set_temperature(22)
         assert self.system.read_room_temperature() == 22
 
-    # TC33: Validate if the user can define a temperature of 14 or more, but less than 31, by the RT
+    # TC32: Validate if the user can define a temperature of 14 or more, but less than 31, by the RT
     @pytest.mark.critical
     def test_RT_set_valid_temperature(self):
         self.system.set_temperature(20)
         assert self.system.read_room_temperature() == 20
 
-    # TC34: Validate if the user can not define a temperature of 13 or less, by the RT
+    # TC33: Validate if the user can not define a temperature of 13 or less, by the RT
     @pytest.mark.medium
     def test_RT_set_temperature_below_minimum(self):
         with pytest.raises(ValueError):
             self.system.set_temperature(13)
 
-    # TC35: Validate if the user can not define a temperature of 31 or more, by the RT
+    # TC34: Validate if the user can not define a temperature of 31 or more, by the RT
     @pytest.mark.medium
     def test_RT_set_temperature_above_maximum(self):
         with pytest.raises(ValueError):
             self.system.set_temperature(31)
 
-    # TC36: Validate if the RT shows the user the system operation mode (holiday mode/system state)
+    # TC35: Validate if the RT shows the user the system operation mode (holiday mode/system state)
     @pytest.mark.high
     def test_RT_shows_system_operation_mode(self):
         self.system.set_holiday_mode(22, "01/08/2024", "31/08/2024")
         assert self.system.get_system_mode() == "Holiday Mode"
 
-    # TC37: Validate if the RT allows the user to configure the system state
+    # TC36: Validate if the RT allows the user to configure the system state
     @pytest.mark.medium
     def test_RT_configure_system_state(self):
         self.system.configure_system_state_welcome_message("Hi Manoel")
         assert self.system.get_welcome_message() == "Hi Manoel"
 
-    # TC38: Validate, when the RT is disconnected from the MMI, it loses communication with the RT, and an Error appears.
+    # TC37: Validate, when the RT is disconnected from the MMI, it loses communication with the RT, and an Error appears.
     @pytest.mark.high
     def test_ERRORS_disconnected_error(self):
         self.system.disconnect_RT()
         assert self.system.get_error_message() == "RT disconnected"
 
-    # TC39: Validate, when the temperature sensor does not work as expected, an Error appears.
+    # TC38: Validate, when the temperature sensor does not work as expected, an Error appears.
     @pytest.mark.critical
     def test_ERRORS_temperature_sensor_error(self):
         self.system.simulate_sensor_failure()
         assert self.system.get_error_message() == "Temperature sensor malfunction"
 
-    # TC40: Validate, when the LAN/WLAN is disconnected from the system configuration, the MMI loses communication with the APP, and an Error appears.
+    # TC39: Validate, when the LAN/WLAN is disconnected from the system configuration, the MMI loses communication with the APP, and an Error appears.
     @pytest.mark.high
     def test_LAN_WLAN_disconnection_error(self):
         self.system.disconnect_lan()
